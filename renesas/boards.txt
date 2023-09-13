@@ -94,5 +94,101 @@ unor4wifi.upload.native_usb=true
 unor4wifi.upload.maximum_size=262144
 unor4wifi.upload.maximum_data_size=32768
 
+##############################################################
+#UNO R4 Bypass has -DNO_USB and -DBACKTRACE_SUPPORT removed
+#Allows switching to the USB connector and using USBSerial on RA4M1
+###############################################################
+###############################################################
+unor4bypass.name=Arduino UNO R4 Bypass
+unor4bypass.build.core=arduino-dev:arduino
+unor4bypass.build.crossprefix=arm-none-eabi-
+unor4bypass.build.compiler_path={runtime.tools.arm-none-eabi-gcc-7-2017q4.path}/bin/
+
+unor4bypass.build.variant=arduino-dev:UNOWIFIR4
+unor4bypass.build.mcu=cortex-m4
+unor4bypass.build.architecture=cortex-m4
+unor4bypass.build.fpu=-mfpu=fpv4-sp-d16
+unor4bypass.build.float-abi=-mfloat-abi=hard
+
+unor4bypass.build.board=UNOWIFIR4
+unor4bypass.build.defines=-DF_CPU=48000000 -DARDUINO_UNOR4_WIFI
+unor4bypass.vid.0=0x2341
+unor4bypass.pid.0=0x1002
+unor4bypass.vid.1=0x2341
+unor4bypass.pid.1=0x006D
+unor4bypass.upload_port.0.vid=0x2341
+unor4bypass.upload_port.0.pid=0x1002
+unor4bypass.upload_port.1.vid=0x2341
+unor4bypass.upload_port.1.pid=0x006D
+
+unor4bypass.compiler.fsp.defines={build.variant.path}/defines.txt
+unor4bypass.compiler.fsp.ldflags={build.variant.path}/ldflags.txt
+unor4bypass.compiler.fsp.cflags=-mthumb "@{compiler.fsp.defines}"
+unor4bypass.compiler.fsp.cxxflags=-mthumb "@{compiler.fsp.defines}"
+unor4bypass.compiler.tinyusb.cflags=-DCFG_TUSB_MCU=OPT_MCU_RAXXX
+unor4bypass.compiler.tinyusb.cxxflags=-DCFG_TUSB_MCU=OPT_MCU_RAXXX
+unor4bypass.compiler.fsp.includes={build.variant.path}/includes.txt
+unor4bypass.compiler.fsp.extra_ldflags=--specs=nano.specs -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
+unor4bypass.compiler.fsp="{build.variant.path}/libs/libfsp.a"
+
+unor4bypass.upload.tool=bossac
+unor4bypass.upload.tool.default=bossac
+unor4bypass.upload.protocol=sam-ba
+unor4bypass.upload.transport=
+unor4bypass.upload.vid=0x2341
+unor4bypass.upload.pid=0x1002
+unor4bypass.upload.use_1200bps_touch=true
+unor4bypass.upload.wait_for_upload_port=false
+unor4bypass.upload.native_usb=true
+unor4bypass.upload.maximum_size=262144
+unor4bypass.upload.maximum_data_size=32768
+
+##############################################################
+#UNO R4 Host is my attempt at enabling host mode on the RA4M1
+###############################################################
+###############################################################
+unor4host.name=Arduino UNO R4 Host
+unor4host.build.core=arduino-dev:arduino
+unor4host.build.crossprefix=arm-none-eabi-
+unor4host.build.compiler_path={runtime.tools.arm-none-eabi-gcc-7-2017q4.path}/bin/
+
+unor4host.build.variant=arduino-dev:UNOWIFIR4
+unor4host.build.mcu=cortex-m4
+unor4host.build.architecture=cortex-m4
+unor4host.build.fpu=-mfpu=fpv4-sp-d16
+unor4host.build.float-abi=-mfloat-abi=hard
+
+unor4host.build.board=UNOWIFIR4
+unor4host.build.defines=-DF_CPU=48000000 -DNO_USB -DBACKTRACE_SUPPORT -DR4_HOST_MODE -DARDUINO_UNOR4_WIFI
+unor4host.vid.0=0x2341
+unor4host.pid.0=0x1002
+unor4host.vid.1=0x2341
+unor4host.pid.1=0x006D
+unor4host.upload_port.0.vid=0x2341
+unor4host.upload_port.0.pid=0x1002
+unor4host.upload_port.1.vid=0x2341
+unor4host.upload_port.1.pid=0x006D
+
+unor4host.compiler.fsp.defines={build.variant.path}/defines.txt
+unor4host.compiler.fsp.ldflags={build.variant.path}/ldflags.txt
+unor4host.compiler.fsp.cflags=-mthumb "@{compiler.fsp.defines}"
+unor4host.compiler.fsp.cxxflags=-mthumb "@{compiler.fsp.defines}"
+unor4host.compiler.tinyusb.cflags=-DCFG_TUSB_MCU=OPT_MCU_RAXXX
+unor4host.compiler.tinyusb.cxxflags=-DCFG_TUSB_MCU=OPT_MCU_RAXXX
+unor4host.compiler.fsp.includes={build.variant.path}/includes.txt
+unor4host.compiler.fsp.extra_ldflags=--specs=nano.specs -lstdc++ -lsupc++ -lm -lc -lgcc -lnosys
+unor4host.compiler.fsp="{build.variant.path}/libs/libfsp.a"
+
+unor4host.upload.tool=bossac
+unor4host.upload.tool.default=bossac
+unor4host.upload.protocol=sam-ba
+unor4host.upload.transport=
+unor4host.upload.vid=0x2341
+unor4host.upload.pid=0x1002
+unor4host.upload.use_1200bps_touch=true
+unor4host.upload.wait_for_upload_port=false
+unor4host.upload.native_usb=true
+unor4host.upload.maximum_size=262144
+unor4host.upload.maximum_data_size=32768
 
 
