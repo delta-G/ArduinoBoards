@@ -22,7 +22,16 @@
 #define BOARD_TUH_RHPORT      0
 #endif
 
-#define CFG_TUSB_RHPORT0_MODE   (OPT_MODE_HOST)
+// RHPort max operational speed can defined by board.mk
+#ifndef BOARD_TUH_MAX_SPEED
+#define BOARD_TUH_MAX_SPEED   OPT_MODE_DEFAULT_SPEED
+#endif
+
+// Default is max speed that hardware controller could support with on-chip PHY
+#define CFG_TUH_MAX_SPEED     BOARD_TUH_MAX_SPEED
+
+
+//#define CFG_TUSB_RHPORT0_MODE   (OPT_MODE_HOST)
 
 // Default is max speed that hardware controller could support with on-chip PHY
 //#define CFG_TUH_MAX_SPEED     BOARD_TUH_MAX_SPEED
@@ -65,6 +74,7 @@
 
 
 #endif   // defined R4_HOST_MODE
+//#else 
 
 // RHPort number used for device can be defined by board.mk, default to port 0
 #ifndef BOARD_TUD_RHPORT
@@ -146,7 +156,7 @@
 // MSC Buffer size of Device Mass storage
 #define CFG_TUD_MSC_EP_BUFSIZE   512
 
-
+//#endif // else -- not defined R4_HOST_MODE
 
 #ifdef __cplusplus
  }

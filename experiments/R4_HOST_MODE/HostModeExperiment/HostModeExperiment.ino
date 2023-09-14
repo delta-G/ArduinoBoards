@@ -30,11 +30,13 @@ static ioport_instance_ctrl_t port_ctrl;
 
 void setup() {
   SER.begin(115200);
+  delay(500);
   SER.println();
   SER.println("UNO R4 TinyUSB Host Experiment.");
   SER.println();
   pinMode(heartPin, OUTPUT);
   pinMode(8, INPUT_PULLUP);
+  pinMode(9, INPUT_PULLUP);
   pinMode(startInput, INPUT_PULLUP);
 
   SER.println("Holding for Pin 7 to Ground.");
@@ -95,16 +97,31 @@ void setup() {
 
 void loop() {
   if (digitalRead(8) == LOW) {
-    R_USB_FS0->INTSTS1 &= ~R_USB_FS0_INTSTS1_ATTCH_Msk;
+    // R_USB_FS0->INTSTS1 &= ~R_USB_FS0_INTSTS1_ATTCH_Msk;
+    R_USB_FS0->INTSTS1 = 0;
   }
+  int pin9State = digitalRead(9);
+  static int oldPin9State = 0;
+  if (pin9State != oldPin9State) {
+    if (pin9State == LOW) {
+      // reset USB
+      SER.println("Resetting USB");
+      R_USB_FS0->DVSTCTR0 = 0x0200;
+      R_USB_FS0->DVSTCTR0 |= R_USB_FS0_DVSTCTR0_USBRST_Msk;
+      delay(15);
+      R_USB_FS0->DVSTCTR0 = 0x0210;
+    }
+    oldPin9State = pin9State;
+  }
+
+  printSomeData();
   heartbeat();
   tuh_task();
-  static unsigned long pm = millis();
-  unsigned long cm = millis();
-  if (cm - pm >= 200) {
-    printSomeData();
-    pm = cm;
-  }
+  // static unsigned long pm = millis();
+  // unsigned long cm = millis();
+  // if (cm - pm >= 200) {
+  //   pm = cm;
+  // }
 }
 
 
@@ -123,7 +140,7 @@ void heartbeat() {
 void printSomeData() {
   volatile uint16_t dvstctr0 = R_USB_FS0->DVSTCTR0;
   static uint16_t old_dvstctr0 = 0;
-  if(dvstctr0 != old_dvstctr0){
+  if (dvstctr0 != old_dvstctr0) {
     SER.print("OLD DVSTCTR0 : ");
     SER.println(old_dvstctr0, HEX);
     SER.print("NEW DVSTCTR0 : ");
@@ -132,7 +149,7 @@ void printSomeData() {
   }
   volatile uint16_t syssts0 = R_USB_FS0->SYSSTS0;
   static uint16_t old_syssts0 = 0;
-  if(syssts0 != old_syssts0){
+  if (syssts0 != old_syssts0) {
     SER.print("OLD SYSSTS0 : ");
     SER.println(old_syssts0, HEX);
     SER.print("NEW SYSSTS0 : ");
@@ -141,7 +158,7 @@ void printSomeData() {
   }
   volatile uint16_t syscfg = R_USB_FS0->SYSCFG;
   static uint16_t old_syscfg = 0;
-  if(syscfg != old_syscfg){
+  if (syscfg != old_syscfg) {
     SER.print("OLD SYSCFG : ");
     SER.println(old_syscfg, HEX);
     SER.print("NEW SYSCFG : ");
@@ -150,7 +167,7 @@ void printSomeData() {
   }
   volatile uint16_t intsts0 = R_USB_FS0->INTSTS0;
   static uint16_t old_intsts0 = 0;
-  if(intsts0 != old_intsts0){
+  if (intsts0 != old_intsts0) {
     SER.print("OLD INTSTS0 : ");
     SER.println(old_intsts0, HEX);
     SER.print("NEW INTSTS0 : ");
@@ -159,7 +176,7 @@ void printSomeData() {
   }
   volatile uint16_t intsts1 = R_USB_FS0->INTSTS1;
   static uint16_t old_intsts1 = 0;
-  if(intsts1 != old_intsts1){
+  if (intsts1 != old_intsts1) {
     SER.print("OLD INTSTS1 : ");
     SER.println(old_intsts1, HEX);
     SER.print("NEW INTSTS1 : ");
@@ -168,7 +185,7 @@ void printSomeData() {
   }
   volatile uint16_t intenb0 = R_USB_FS0->INTENB0;
   static uint16_t old_intenb0 = 0;
-  if(intenb0 != old_intenb0){
+  if (intenb0 != old_intenb0) {
     SER.print("OLD INTENB0 : ");
     SER.println(old_intenb0, HEX);
     SER.print("NEW INTENB0 : ");
@@ -177,12 +194,39 @@ void printSomeData() {
   }
   volatile uint16_t intenb1 = R_USB_FS0->INTENB1;
   static uint16_t old_intenb1 = 0;
-  if(intenb1 != old_intenb1){
+  if (intenb1 != old_intenb1) {
     SER.print("OLD INTENB1 : ");
     SER.println(old_intenb1, HEX);
     SER.print("NEW INTENB1 : ");
     SER.println(intenb1, HEX);
     old_intenb1 = intenb1;
+  }
+  volatile uint16_t sofcfg = R_USB_FS0->SOFCFG;
+  static uint16_t old_sofcfg = 0;
+  if (sofcfg != old_sofcfg) {
+    SER.print("OLD SOFCFG : ");
+    SER.println(old_sofcfg, HEX);
+    SER.print("NEW SOFCFG : ");
+    SER.println(sofcfg, HEX);
+    old_sofcfg = sofcfg;
+  }
+  volatile uint16_t dcpcfg = R_USB_FS0->DCPCFG;
+  static uint16_t old_dcpcfg = 0;
+  if (dcpcfg != old_dcpcfg) {
+    SER.print("OLD DCPCFG : ");
+    SER.println(old_dcpcfg, HEX);
+    SER.print("NEW DCPCFG : ");
+    SER.println(dcpcfg, HEX);
+    old_dcpcfg = dcpcfg;
+  }
+  volatile uint16_t dcpctr = R_USB_FS0->DCPCTR;
+  static uint16_t old_dcpctr = 0;
+  if (dcpctr != old_dcpctr) {
+    SER.print("OLD DCPCTR : ");
+    SER.println(old_dcpctr, HEX);
+    SER.print("NEW DCPCTR : ");
+    SER.println(dcpctr, HEX);
+    old_dcpctr = dcpctr;
   }
 }
 
@@ -233,3 +277,4 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
     SER.println("ERROR:  Cannot request continuing report...");
   }
 }
+
