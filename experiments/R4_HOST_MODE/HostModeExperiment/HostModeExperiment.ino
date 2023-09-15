@@ -49,8 +49,8 @@ void setup() {
 
   // Switch the mux to the RA4M1 chip
   // configure_usb_mux();
-  pinMode(40, OUTPUT);
-  digitalWrite(40, HIGH);
+  pinMode(21, OUTPUT);
+  digitalWrite(21, HIGH);
 
   // Set up our pins:
   R_IOPORT_Open(&port_ctrl, &family_pin_cfg);
